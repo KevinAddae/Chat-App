@@ -1,6 +1,5 @@
 package com.example.chatapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -21,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText password, email;
 
-    Button loginbtn;
+    Button loginBtn;
 
     FirebaseAuth auth;
 
@@ -30,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
+        getSupportActionBar().setTitle("Login");
         // Sets up the action bar with bar_layout.xml
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
@@ -39,9 +40,10 @@ public class LoginActivity extends AppCompatActivity {
 
         password = findViewById(R.id.login_password);
         email = findViewById(R.id.login_email);
-        loginbtn = findViewById(R.id.loginBtn);
+        loginBtn = findViewById(R.id.login_Btn);
+        auth = FirebaseAuth.getInstance();
 
-        loginbtn.setOnClickListener(view -> {
+        loginBtn.setOnClickListener(view -> {
             String txtEmail = email.getText().toString();
             String txtPassword = password.getText().toString();
 
@@ -52,7 +54,11 @@ public class LoginActivity extends AppCompatActivity {
                 auth.signInWithEmailAndPassword(txtEmail,txtPassword).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                    }
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(i);
+                        finish();
+                    } else
+                        Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show();
                 });
             }
         });

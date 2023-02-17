@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
 
@@ -51,12 +52,16 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        getSupportActionBar().setTitle("Register");
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 //        getSupportActionBar().setTitle("Register");
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //
-
+        /**
+         * firebase firestore original rule after if
+         */
+//        request.time < timestamp.date(2023, 2, 12);
 
         username = findViewById(R.id.register_username);
         password = findViewById(R.id.register_password);
@@ -102,20 +107,10 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         db.collection("users")
-                        .add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(RegisterActivity.this, "DocumentSnapshot added with ID: " + documentReference.getId(), Toast.LENGTH_SHORT).show();
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(RegisterActivity.this, ""+e, Toast.LENGTH_SHORT).show();
-
-                    }
-                });
+                        .add(user).addOnSuccessListener(documentReference ->
+                        Toast.makeText(RegisterActivity.this, "DocumentSnapshot added with ID: " + documentReference.getId(), Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(RegisterActivity.this, ""+e, Toast.LENGTH_SHORT).show());
 
 //        reference.setValue(hashMap);
 
@@ -133,4 +128,5 @@ public class RegisterActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
 }
