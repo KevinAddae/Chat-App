@@ -108,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         db.collection("users")
                         .add(user).addOnSuccessListener(documentReference ->
-                        Toast.makeText(RegisterActivity.this, "DocumentSnapshot added with ID: " + documentReference.getId(), Toast.LENGTH_SHORT).show())
+                        Toast.makeText(RegisterActivity.this, "DocumentSnapshot added with ID: " + documentReference.getId(), Toast.LENGTH_LONG).show())
                 .addOnFailureListener(e ->
                         Toast.makeText(RegisterActivity.this, ""+e, Toast.LENGTH_SHORT).show());
 
