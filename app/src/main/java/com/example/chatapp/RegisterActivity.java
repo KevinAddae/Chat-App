@@ -1,32 +1,19 @@
 package com.example.chatapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 
@@ -43,9 +30,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     ProgressDialog progressDialog;
 
-    DatabaseReference reference;
+    DocumentReference reference;
 
-    FirebaseFirestore db;
+    FirebaseFirestore fStore;
+
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
 
         auth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        fStore = FirebaseFirestore.getInstance();
 
 
         btnRegister.setOnClickListener(view -> {
@@ -97,20 +86,29 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void sendUserToNext() {
         String userID = auth.getCurrentUser().getUid();
+        DocumentReference documentReference = fStore.collection("users").document(userID);
 
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(userID);
+
+        //reference = FirebaseDatabase.getInstance().getReference("Users").child(userID);
 
         HashMap<String, String> user = new HashMap<>();
         user.put("id", userID);
         user.put("username", username.getText().toString());
         user.put("imageURL", "default");
 
+        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(RegisterActivity.this, "DocumentSnapshot added with ID: " + documentReference.getId(), Toast.LENGTH_LONG).show();
 
-        db.collection("users")
-                        .add(user).addOnSuccessListener(documentReference ->
-                        Toast.makeText(RegisterActivity.this, "DocumentSnapshot added with ID: " + documentReference.getId(), Toast.LENGTH_LONG).show())
-                .addOnFailureListener(e ->
-                        Toast.makeText(RegisterActivity.this, ""+e, Toast.LENGTH_SHORT).show());
+            }
+        });
+
+//        fStore.collection("users")
+//                        .add(user).addOnSuccessListener(documentReference ->
+//                        Toast.makeText(RegisterActivity.this, "DocumentSnapshot added with ID: " + documentReference.getId(), Toast.LENGTH_LONG).show())
+//                .addOnFailureListener(e ->
+//                        Toast.makeText(RegisterActivity.this, ""+e, Toast.LENGTH_SHORT).show());
 
 //        reference.setValue(hashMap);
 

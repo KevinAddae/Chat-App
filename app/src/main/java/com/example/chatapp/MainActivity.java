@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 username.setText(value.getString("username"));
-                if (value.getString("imageURL").equals("default"))
+                Toast.makeText(MainActivity.this, "" + value.getString("username"), Toast.LENGTH_SHORT).show();
+                //if (value.getString("imageURL").toString().equals("default"))
                     profilePic.setImageResource(R.mipmap.ic_launcher);
             }
         });
