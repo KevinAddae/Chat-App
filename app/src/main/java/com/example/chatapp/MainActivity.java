@@ -52,10 +52,12 @@ public class MainActivity extends AppCompatActivity {
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                username.setText(value.getString("username"));
-                Toast.makeText(MainActivity.this, "" + value.getString("username"), Toast.LENGTH_SHORT).show();
-                //if (value.getString("imageURL").toString().equals("default"))
+                if (value != null) {
+                    username.setText(value.getString("username"));
+                    Toast.makeText(MainActivity.this, "" + value.getString("username"), Toast.LENGTH_SHORT).show();
+                    //if (value.getString("imageURL").toString().equals("default"))
                     profilePic.setImageResource(R.mipmap.ic_launcher);
+                }
             }
         });
 
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.login_Btn:
+            case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(MainActivity.this, StartUpActivity.class));
                 finish();

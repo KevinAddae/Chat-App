@@ -63,9 +63,9 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         btnRegister.setOnClickListener(view -> {
-            String txtUsername = username.getText().toString();
-            String txtEmail = email.getText().toString();
-            String txtPassword = password.getText().toString();
+            String txtUsername = username.getText().toString().trim();
+            String txtEmail = email.getText().toString().trim();
+            String txtPassword = password.getText().toString().trim();
 
             if (TextUtils.isEmpty(txtUsername) || TextUtils.isEmpty(txtEmail) || TextUtils.isEmpty(txtPassword)) {
                 Toast.makeText(RegisterActivity.this, "All fields are required", Toast.LENGTH_LONG).show();
