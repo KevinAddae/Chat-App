@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(i);
                         finish();
                     } else
-                        Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Incorrect Password or Email, Please try again", Toast.LENGTH_SHORT).show();
                 });
             }
         });

@@ -30,11 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     ProgressDialog progressDialog;
 
-    DocumentReference reference;
-
     FirebaseFirestore fStore;
-
-    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,31 +96,13 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void unused) {
                 Toast.makeText(RegisterActivity.this, "DocumentSnapshot added with ID: " + documentReference.getId(), Toast.LENGTH_LONG).show();
-
             }
         });
-
-//        fStore.collection("users")
-//                        .add(user).addOnSuccessListener(documentReference ->
-//                        Toast.makeText(RegisterActivity.this, "DocumentSnapshot added with ID: " + documentReference.getId(), Toast.LENGTH_LONG).show())
-//                .addOnFailureListener(e ->
-//                        Toast.makeText(RegisterActivity.this, ""+e, Toast.LENGTH_SHORT).show());
-
-//        reference.setValue(hashMap);
-
-//        reference.setValue(hashMap).addOnCompleteListener(task1 -> {
-//            if (task1.isSuccessful()) {
-//                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
-//                finish();
-//            } else
-//                Toast.makeText(this, "The database has not saved user info", Toast.LENGTH_SHORT).show();
-//        });
 
         Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        finish();
     }
 
 }
