@@ -3,6 +3,7 @@ package com.example.chatapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -49,29 +50,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         profilePic = findViewById(R.id.mainProfile_image);
-        username = getLayoutInflater().inflate(R.layout.user_actionbar, null).findViewById(R.id.action_main_username);
+        username = findViewById(R.id.main_username);
+
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
         fStore = FirebaseFirestore.getInstance();
+
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        //getSupportActionBar().hide();
+        //setSupportActionBar(toolbar);
+
 
         DocumentReference documentReference = fStore.collection("users").document(firebaseUser.getUid());
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 if (value != null) {
-                    getSupportActionBar().setDisplayShowTitleEnabled(false);
-                    getSupportActionBar().setDisplayShowCustomEnabled(true);
-
 
                     username.setText(value.getString("username"));
                     Toast.makeText(MainActivity.this, "" + value.getString("username"), Toast.LENGTH_SHORT).show();
                     if (value.getString("imageURL").equals("default"))
                         profilePic.setImageResource(R.mipmap.ic_launcher);
-
-                    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View view = inflater.inflate(R.layout.user_actionbar,null);
-                    getSupportActionBar().setCustomView(view);
                 }
             }
         });
