@@ -37,9 +37,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         User user = mUser.get(position);
-        holder.username.setText(user.getUsername());
+        TextView username = holder.itemView.findViewById(R.id.single_username);
+        ImageView profile_image = holder.itemView.findViewById(R.id.single_profile_image);
+        username.setText(user.getUsername());
         if (user.getImageURL().equals("default"))
-            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+            profile_image.setImageResource(R.mipmap.ic_launcher);
         else
             Glide.with(mContext).load(user.getImageURL()).into(holder.profile_image);
 
@@ -58,8 +60,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            username = itemView.findViewById(R.id.username);
-            profile_image = itemView.findViewById(R.id.profile_image);
+//            username = itemView.findViewById(R.id.username);
+//            profile_image = itemView.findViewById(R.id.profile_image);
 
 
         }
