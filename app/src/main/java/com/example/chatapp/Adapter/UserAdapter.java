@@ -50,7 +50,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent (mContext, MessageActivity.class);
-            intent.putExtra("userID",user.getId());
+            intent.putExtra("userID",user);
             mContext.startActivity(intent);
         });
     }

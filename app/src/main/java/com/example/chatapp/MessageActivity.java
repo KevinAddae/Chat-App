@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.chatapp.model.User;
@@ -49,31 +50,36 @@ public class MessageActivity extends AppCompatActivity {
         profile_image = findViewById(R.id.mainProfile_image);
         username = findViewById(R.id.main_username);
         intent = getIntent();
-        String userId = intent.getStringExtra("userID");
+        User user = (User) intent.getSerializableExtra("userID");
 
         fUser = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("users").child(userId);
+        reference = FirebaseDatabase.getInstance().getReference("users").child(user.getId());
         Log.i("MessageActivity","before reference lines");
 
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.i("MessageActivity","during reference lines");
-                User user = snapshot.getValue(User.class);
-                username.setText(user.getUsername());
-                if (user.getImageURL().equals("default"))
-                    profile_image.setImageResource(R.mipmap.ic_launcher_round);
-                else
-                    Glide.with(MessageActivity.this).load(user.getImageURL());
+        username.setText(user.getUsername());
+        if (user.getImageURL().equals("default"))
+            profile_image.setImageResource(R.mipmap.ic_launcher_round);
+        else
+            Glide.with(MessageActivity.this).load(user.getImageURL());
 
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+//            reference.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    Log.i("MessageActivity","during reference lines");
+//                    User user = snapshot.getValue(User.class);
+//                    username.setText(user.getUsername());
+//                    if (user.getImageURL().equals("default"))
+//                        profile_image.setImageResource(R.mipmap.ic_launcher_round);
+//                    else
+//                        Glide.with(MessageActivity.this).load(user.getImageURL());
+//
+//
+//                }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Toast.makeText(MessageActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
     }
 
