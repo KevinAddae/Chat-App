@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,16 +23,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageActivity extends AppCompatActivity {
-    ImageView profile_image;
+    ImageView profile_image, sendBtn;
     TextView username;
-
+    EditText sendTxt;
     FirebaseUser fUser;
-    DatabaseReference reference;
-
+    DocumentReference reference;
+    FirebaseFirestore fStore;
     Intent intent;
 
     @Override
@@ -39,21 +44,20 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        // Add support for the action bar
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setTitle("");
+
+        // adds the back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        toolbar.setNavigationOnClickListener(v -> finish());
 
-
+        sendBtn = findViewById(R.id.btn_send);
+        sendTxt = findViewById(R.id.txt_send);
         profile_image = findViewById(R.id.mainProfile_image);
         username = findViewById(R.id.main_username);
+
         intent = getIntent();
-        User user = (User) intent.getSerializableExtra("userID");
+        User user = (User) intent.getSerializableExtra("user");
 
         fUser = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("users").child(user.getId());
+
         Log.i("MessageActivity","before reference lines");
 
         username.setText(user.getUsername());
@@ -62,25 +66,18 @@ public class MessageActivity extends AppCompatActivity {
         else
             Glide.with(MessageActivity.this).load(user.getImageURL());
 
-//            reference.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    Log.i("MessageActivity","during reference lines");
-//                    User user = snapshot.getValue(User.class);
-//                    username.setText(user.getUsername());
-//                    if (user.getImageURL().equals("default"))
-//                        profile_image.setImageResource(R.mipmap.ic_launcher_round);
-//                    else
-//                        Glide.with(MessageActivity.this).load(user.getImageURL());
-//
-//
-//                }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Toast.makeText(MessageActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
 
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String msg = sendTxt.getText().toString();
+//                if (!msg.equals(""))
+//                    sendMessage(fUser.getUid(),user.getUsername(),msg);
+//                else
+//                    Toast.makeText(MessageActivity.this, "Cannot send nothing", Toast.LENGTH_SHORT).show();
+//                sendTxt.setText("");
+            }
+        });
     }
 
     @Override
@@ -88,5 +85,16 @@ public class MessageActivity extends AppCompatActivity {
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
         startActivityForResult(i,0);
         return true;
+    }
+
+    public void sendMessage(String sender, String receiver, String message) {
+        String userID = (String) intent.getSerializableExtra("id");
+        reference = fStore.collection("chats").document(userID);
+        HashMap<String, Object> interaction = new HashMap<>();
+        interaction.put("sender", sender);
+        interaction.put("receiver", receiver);
+        interaction.put("message", message);
+
+        reference.set(interaction);
     }
 }
