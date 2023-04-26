@@ -40,7 +40,7 @@ public class UserFragment extends Fragment {
     RecyclerView recyclerView;
     UserAdapter userAdapter;
     List<User> mUsers;
-
+    FirebaseUser firebaseUser;
     FirebaseFirestore db;
 
 
@@ -54,6 +54,7 @@ public class UserFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         db = FirebaseFirestore.getInstance();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         mUsers = new ArrayList<>();
         readUsers();
@@ -64,8 +65,9 @@ public class UserFragment extends Fragment {
         db.collection("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()){
-                    mUsers.add(new User(document.get("id").toString(),document.get("username").toString(),document.get("imageURL").toString()));
-                    Toast.makeText(getActivity(), document.get("username").toString(), Toast.LENGTH_SHORT).show();
+                    if (!document.get("id").toString().equals(firebaseUser.getUid()))
+                        mUsers.add(new User(document.get("id").toString(),document.get("username").toString(),document.get("imageURL").toString()));
+                    //Toast.makeText(getActivity(), document.get("username").toString(), Toast.LENGTH_SHORT).show();
 
                 }
                 userAdapter = new UserAdapter(getContext(), mUsers);
