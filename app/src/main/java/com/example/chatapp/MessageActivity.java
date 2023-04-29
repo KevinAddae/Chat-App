@@ -60,8 +60,6 @@ public class MessageActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        linearLayoutManager.setStackFromEnd(false);
-        linearLayoutManager.setReverseLayout(false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         sendBtn = findViewById(R.id.btn_send);
@@ -136,11 +134,11 @@ public class MessageActivity extends AppCompatActivity {
                             document.get("receiver").toString(),
                             document.get("message").toString()));
                 }
-                Log.i("MessageAdapter", "The size of mChat : " + mChat.size());
-                messageAdapter = new MessageAdapter(MessageActivity.this,mChat,imageURL);
-                messageAdapter.notifyDataSetChanged();
-                recyclerView.setAdapter(messageAdapter);
             }
+            Log.i("MessageAdapter", "The size of mChat : " + mChat.size());
+            messageAdapter = new MessageAdapter(MessageActivity.this,mChat,imageURL);
+            messageAdapter.notifyItemInserted(mChat.size()-1);
+            recyclerView.setAdapter(messageAdapter);
         });
         }
 
