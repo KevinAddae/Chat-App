@@ -54,7 +54,10 @@ public class ChatFragment extends Fragment {
 
         usersList = new ArrayList<>();
         usersList.clear();
-
+/**
+ * This will collect all the ids of users that have messages with the currently logged in
+ * user.
+ */
         db.collection("chats").get().addOnCompleteListener(task -> {
             for (QueryDocumentSnapshot document : task.getResult()) {
                 if(document.get("sender").toString().equals(fUser.getUid()))
@@ -63,15 +66,14 @@ public class ChatFragment extends Fragment {
                     usersList.add(document.get("sender").toString());
             }
         });
-
-
         readChats();
 
         return view;
     }
 
     /**
-     * This will get users
+     * This will get users from Firebase db that have a chat with the user that is currently logged.
+     * Also will show the collected users on the recyclerview
      */
     private void readChats() {
         mUser = new ArrayList<>();
