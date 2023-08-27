@@ -70,11 +70,11 @@ public class UserFragment extends Fragment {
                     //Toast.makeText(getActivity(), document.get("username").toString(), Toast.LENGTH_SHORT).show();
 
                 }
-                userAdapter = new UserAdapter(getContext(), mUsers);
-                recyclerView.setAdapter(userAdapter);
             }  else {
                 Toast.makeText(getActivity(), "Do", Toast.LENGTH_SHORT).show();
             }
+            userAdapter = new UserAdapter(getContext(), mUsers);
+            recyclerView.setAdapter(userAdapter);
         });
 
     }

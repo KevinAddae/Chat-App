@@ -60,6 +60,7 @@ public class MessageActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.getStackFromEnd();
         recyclerView.setLayoutManager(linearLayoutManager);
 
         sendBtn = findViewById(R.id.btn_send);
