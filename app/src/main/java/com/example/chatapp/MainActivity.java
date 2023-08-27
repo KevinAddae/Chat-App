@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.chatapp.Fragments.ChatFragment;
+import com.example.chatapp.Fragments.ProfileFragment;
 import com.example.chatapp.Fragments.UserFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPagerAdapter.addFragment(new UserFragment(), "Users");
         viewPagerAdapter.addFragment(new ChatFragment(), "Chats");
+        viewPagerAdapter.addFragment(new ProfileFragment(), "Profile");
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);

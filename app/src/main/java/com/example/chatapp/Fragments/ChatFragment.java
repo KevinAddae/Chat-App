@@ -55,7 +55,7 @@ public class ChatFragment extends Fragment {
         usersList = new ArrayList<>();
         usersList.clear();
 /**
- * This will collect all the ids of users that have messages with the currently logged in
+ * This will collect all the Ids of users that have messages with the currently logged in
  * user.
  */
         db.collection("chats").get().addOnCompleteListener(task -> {
