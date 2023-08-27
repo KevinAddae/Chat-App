@@ -11,20 +11,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.chatapp.Adapter.UserAdapter;
 import com.example.chatapp.R;
-import com.example.chatapp.model.Chat;
 import com.example.chatapp.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -38,8 +35,7 @@ public class ChatFragment extends Fragment {
     private UserAdapter userAdapter;
     private List<User> mUser;
     FirebaseUser fUser;
-    DatabaseReference reference;
-    FirebaseFirestore fStore;
+    FirebaseFirestore db;
 
     private  List<String> usersList;
 
@@ -53,25 +49,25 @@ public class ChatFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         fUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        db = FirebaseFirestore.getInstance();
+
         usersList = new ArrayList<>();
-        reference = FirebaseDatabase.getInstance().getReference("chats");
-        fStore = FirebaseFirestore.getInstance();
         usersList.clear();
 
-        fStore.collection("chats").get().addOnCompleteListener(task -> {
+        db.collection("chats").get().addOnCompleteListener(task -> {
             for (QueryDocumentSnapshot document : task.getResult()) {
                 if(document.get("sender").toString().equals(fUser.getUid()))
-                    usersList.add(document.get("sender").toString());
-                if(document.get("receiver").toString().equals(fUser.getUid()))
                     usersList.add(document.get("receiver").toString());
+                else if(document.get("receiver").toString().equals(fUser.getUid()))
+                    usersList.add(document.get("sender").toString());
             }
         });
 
-        Log.e("ChatFragment",usersList.size() + "Is the size");
 
         readChats();
-        return view;
 
+        return view;
     }
 
     /**
@@ -79,32 +75,21 @@ public class ChatFragment extends Fragment {
      */
     private void readChats() {
         mUser = new ArrayList<>();
-
-        fStore.collection("users").get().addOnCompleteListener(task -> {
-            mUser.clear();
-
-            for (QueryDocumentSnapshot document : task.getResult()) {
-                for (String id: usersList) {
-                    if (document.get("id").equals(id))
-                        if (mUser.size() != 0) {
-                            Log.e("ChatFragment",usersList.size() + "Is the ID");
-                            Log.e("ChatFragment",id);
-                            if(id!= fUser.getUid());
-                            for (User user: mUser)  {
-                                if (!document.get(id).toString().equals(user.getId()))
-                                    mUser.add(new User(document.get("id").toString()
-                                            ,document.get("imageURL").toString()
-                                            ,document.get("username").toString()));
-                            }
-                        } else
-                            mUser.add(new User(document.get("id").toString()
-                                    ,document.get("imageURL").toString()
-                                    ,document.get("username").toString()));
+        db.collection("users").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                for (QueryDocumentSnapshot document: task.getResult()){
+                    for (String id: usersList)
+                        if (document.get("id").toString().equals(id))
+                            mUser.add(new User(document.get("id").toString(),document.get("username").toString()
+                                    ,document.get("imageURL").toString()));
 
                 }
+            }    else {
+                Toast.makeText(getActivity(), "Do", Toast.LENGTH_SHORT).show();
             }
+            userAdapter = new UserAdapter(getContext(),mUser);
+            recyclerView.setAdapter(userAdapter);
         });
-        userAdapter = new UserAdapter(getContext(),mUser);
-        recyclerView.setAdapter(userAdapter);
+
     }
 }
